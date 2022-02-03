@@ -2,9 +2,9 @@
  <div id="root">
     <div class="todo-container">
       <div class="todo-wrap">
-        <UserHeader :addTodo="addTodo"/>
+        <UserHeader @addTodo="addTodo"/>
         <UserList :todos="todos" :checkTodo="checkTodo" :deleteTodo="deleteTodo"/>
-        <UserFooter :todos="todos" :checkAllTodo="checkAllTodo" :clearAllTodo="clearAllTodo"/>
+        <UserFooter :todos="todos" @checkAllTodo="checkAllTodo" @clearAllTodo="clearAllTodo"/>
       </div>
     </div>
 </div>
@@ -22,11 +22,12 @@
     components:{UserHeader,UserList,UserFooter},
      data() {
       return {
-        todos:[
-          {id:'001',title:'吃饭',done:true},
-          {id:'002',title:'睡觉',done:false},
-          {id:'003',title:'开车',done:true},
-          ]
+        todos:JSON.parse(localStorage.getItem('todos')) || []
+        // [
+        //   // {id:'001',title:'吃饭',done:true},
+        //   // {id:'002',title:'睡觉',done:false},
+        //   // {id:'003',title:'开车',done:true},
+        //   ]
       }
     },
     methods:{
@@ -58,6 +59,20 @@
         this.todos = this.todos.filter((todo)=>{
           return !todo.done
         })
+      }
+    },
+    watch:{
+      // 浅层监视
+      // todos(value){
+      //   localStorage.setItem('todos',JSON.stringify(value))
+      // }
+
+      //079深度监视
+      todos:{
+        deep:true,
+        handler(value){
+          localStorage.setItem('todos',JSON.stringify(value))
+        }
       }
     }
   }

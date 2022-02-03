@@ -1,7 +1,8 @@
 <template>
   <div class="todo-footer" v-show="total">
           <label>
-            <input type="checkbox" :checked="isAll" @change="checkAll">
+            <!-- <input type="checkbox" :checked="isAll" @change="checkAll"> -->
+            <input type="checkbox" v-model="isAll"/>
           </label>
           <span>
             <!--App.Vue里不能忘记传todos  <UserFooter :todos="todos"/> -->
@@ -14,7 +15,7 @@
 <script>
     export default {
     name:'UserFooter',
-    props:['todos','checkAllTodo','clearAllTodo'],
+    props:['todos'],
     computed:{
       total(){
         return this.todos.length
@@ -28,8 +29,17 @@
 
         return this.todos.reduce((pre,current)=> pre + (current.done ? 1:0),0)
       },
-      isAll(){
-        return this.doneTotal === this.total && this.total > 0
+      // isAll(){
+      //   return this.doneTotal === this.total && this.total > 0
+      // }
+      isAll:{
+        get(){
+           return this.doneTotal === this.total && this.total > 0
+        },
+        set(value){
+          this.$emit('checkAllTodo',value)
+        }
+
       }
     },
     methods:{
@@ -38,7 +48,8 @@
           this.checkAllTodo(e.target.checked)
       },
       clearAll(){
-        this.clearAllTodo()
+        // this.clearAllTodo()
+        this.$emit('clearAllTodo')
       }
     }
     }
